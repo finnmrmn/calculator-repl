@@ -1,0 +1,112 @@
+The context-free grammar for this calculator is as follows:
+
+<expression> ::= <additive>
+
+<additive> ::= <additive> "+" <multiplicative> 
+             | <additive> "-" <multiplicative> 
+             | <multiplicative>
+
+<multiplicative> ::= <multiplicative> "*" <unary> 
+                   | <multiplicative> "/" <unary> 
+                   | <multiplicative> "mod" <unary> 
+                   | <unary>
+
+<unary> ::= "-" <unary> 
+          | "+" <unary> 
+          | <power>
+
+<power> ::= <primary> "^" <unary> 
+          | <primary>
+
+<primary> ::= <number> 
+            | "(" <expression> ")" 
+            | <function> 
+            | <variable>
+
+<function> ::= <function_name> "(" <expression> ")"
+
+
+<variable> ::= <first_letter> <alnums> 
+             | <first_letter>
+
+<alnums> ::= <alnum> <alnums> 
+           | <alnum>
+
+<alnum> ::= <letter> <alnum> 
+          | <digit> <alnum> 
+          | <letter> 
+          | <digit>
+
+<number> ::= "pi" | "e" | <decimal>
+
+<decimal> ::= <digits> 
+            | <digits> "." 
+            | "." <digits> 
+            | <digits> "." <digits>
+
+<digits> ::= <digit> <digits> 
+           | <digit>
+
+<function_name> ::= "sqrt" | "sin" | "cos" | ... | "arctan"
+
+<first_letter> ::= "_" | <letter>
+
+<letter> ::= "a" | ... | "z" | "A" | ... | "Z"
+
+<digit> ::= "0" | "1" | "2" | ... | "9"
+
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+The REPL extension grammar is as follows:
+
+<REPL> ::= "var " <variable> "=" <expression>
+         | <expression>
+         | "del " <variable>
+         | "exit"
+         | "help"
+
+Note that the suffixed spaces matter in the strings.
+
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+Example with calculator CFG: Generate -sin(pi/2) * 2
+
+<expression>
+-> <additive>
+-> <multiplicative>
+-> <multiplicative> "*" <unary>
+-> <unary> "*" <unary>
+-> "-" <unary> "*" <unary>
+-> "-" <power> "*" <unary>
+-> "-" <primary> "*" <unary>
+-> "-" <function> "*" <unary>
+-> "-" <function_name> "(" <expression> ")*" <unary>
+-> "-sin(" <expression> ")*" <unary>
+-> "-sin(" <additive> ")*" <unary>
+-> "-sin(" <multiplicative> ")*" <unary>
+-> "-sin(" <multiplicative> "/" <unary> ")*" <unary>
+-> "-sin(" <unary> "/" <unary> ")*" <unary>
+-> "-sin(" <power> "/" <unary> ")*" <unary>
+-> "-sin(" <primary> "/" <unary> ")*" <unary>
+-> "-sin(" <number> "/" <unary> ")*" <unary>
+-> "-sin(pi/" <unary> ")*" <unary>
+-> "-sin(pi/" <power> ")*" <unary>
+-> "-sin(pi/" <primary> ")*" <unary>
+-> "-sin(pi/" <number> ")*" <unary>
+-> "-sin(pi/" <decimal> ")*" <unary>
+-> "-sin(pi/" <digits> ")*" <unary>
+-> "-sin(pi/" <digit> ")*" <unary>
+-> "-sin(pi/2)*" <unary>
+-> "-sin(pi/2)*" <power>
+-> "-sin(pi/2)*" <primary>
+-> "-sin(pi/2)*" <number>
+-> "-sin(pi/2)*" <decimal>
+-> "-sin(pi/2)*" <digits>
+-> "-sin(pi/2)*" <digit>
+-> "-sin(pi/2)*2"
+
+Feel free to verify this grammar for yourself.
