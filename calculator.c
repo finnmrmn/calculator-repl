@@ -183,8 +183,8 @@ const struct {
             {"round", round},   {"trunc", trunc},   {"gamma", tgamma},
             {"log10", log10},   {"floor", floor},   {"sqrt", sqrt},
             {"cbrt", cbrt},     {"sinh", sinh},     {"cosh", cosh},
-            {"tanh", tanh},     {"ceil", ceil},     {"sin", sin},
-            {"cos", cos},       {"tan", tan},       {"log2", log2},
+            {"tanh", tanh},     {"ceil", ceil},     {"log2", log2},
+            {"sin", sin},       {"cos", cos},       {"tan", tan},
             {"abs", fabs},      {"fac", factorial}, {"fib", fibonacci},
             {"ln", log}};
 
