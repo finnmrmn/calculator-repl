@@ -165,12 +165,25 @@ double evaluate(double left, enum Operation op, double right) {
 
 bool expression(void);
 
+double factorial(double n) { return tgamma(n + 1); }
+double fibonacci(double n) {
+    double sqrt5 = sqrt(5);
+    return (pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5;
+}
+
 /// @brief Function name to function mapping for evaluation.
 const struct {
     const char name[8]; /// Caution! Ensure the strings can fit!
     double (*const addr)(double);
-} func[] = {{"sqrt", sqrt},   {"sin", sin},     {"cos", cos},    {"tan", tan},
-            {"arcsin", asin}, {"arccos", acos}, {"arctan", atan}};
+} func[] = {{"sqrt", sqrt},     {"cbrt", cbrt},     {"sin", sin},
+            {"cos", cos},       {"tan", tan},       {"arcsin", asin},
+            {"arccos", acos},   {"arctan", atan},   {"sinh", sinh},
+            {"cosh", cosh},     {"tanh", tanh},     {"arcsinh", asinh},
+            {"arccosh", acosh}, {"arctanh", atanh}, {"ln", log},
+            {"log10", log10},   {"log2", log2},     {"abs", fabs},
+            {"ceil", ceil},     {"floor", floor},   {"round", round},
+            {"trunc", trunc},   {"gamma", tgamma},  {"fac", factorial},
+            {"fib", fibonacci}};
 
 /// @brief Function parser.
 ///
