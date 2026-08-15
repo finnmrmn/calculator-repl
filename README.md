@@ -16,6 +16,8 @@ A lightweight calculator REPL written entirely in C using recursive-descent pars
 - Variables
 - Doxygen support
 
+Please ready CFG.txt for a comprehensive definition of the calculator's language features.
+
 ## Requirements
 
 - C23
