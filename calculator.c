@@ -172,18 +172,21 @@ double fibonacci(double n) {
 }
 
 /// @brief Function name to function mapping for evaluation.
+///
+/// @warning Ensure the strings can fit!
+/// @warning Substrings can match first, so put shorter strings last!
 const struct {
-    const char name[8]; /// Caution! Ensure the strings can fit!
+    const char name[8];
     double (*const addr)(double);
-} func[] = {{"sqrt", sqrt},     {"cbrt", cbrt},     {"sin", sin},
-            {"cos", cos},       {"tan", tan},       {"arcsin", asin},
-            {"arccos", acos},   {"arctan", atan},   {"sinh", sinh},
-            {"cosh", cosh},     {"tanh", tanh},     {"arcsinh", asinh},
-            {"arccosh", acosh}, {"arctanh", atanh}, {"ln", log},
-            {"log10", log10},   {"log2", log2},     {"abs", fabs},
-            {"ceil", ceil},     {"floor", floor},   {"round", round},
-            {"trunc", trunc},   {"gamma", tgamma},  {"fac", factorial},
-            {"fib", fibonacci}};
+} func[] = {{"arcsinh", asinh}, {"arccosh", acosh}, {"arctanh", atanh},
+            {"arcsin", asin},   {"arccos", acos},   {"arctan", atan},
+            {"round", round},   {"trunc", trunc},   {"gamma", tgamma},
+            {"log10", log10},   {"floor", floor},   {"sqrt", sqrt},
+            {"cbrt", cbrt},     {"sinh", sinh},     {"cosh", cosh},
+            {"tanh", tanh},     {"ceil", ceil},     {"sin", sin},
+            {"cos", cos},       {"tan", tan},       {"log2", log2},
+            {"abs", fabs},      {"fac", factorial}, {"fib", fibonacci},
+            {"ln", log}};
 
 /// @brief Function parser.
 ///
