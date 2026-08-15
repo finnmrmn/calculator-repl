@@ -47,7 +47,7 @@ The context-free grammar for this calculator is as follows:
 <digits> ::= <digit> <digits> 
            | <digit>
 
-<function_name> ::= "sqrt" | "sin" | "cos" | ... | "arctan"
+<function_name> ::= "sqrt" | "sin" | "cos" | ... (please check calculator.c for full list)
 
 <first_letter> ::= "_" | <letter>
 
