@@ -211,7 +211,7 @@ bool function_expression(void) {
 bool variable(void) {
     const char label[VARLEN] = {0};
     if (!(cursor = variable_extract_label(cursor, label)))
-        error("Variable is invalid (too long / missing).");
+        error("Variable is definition invalid (expression syntax error).");
     if (!variable_get_value(label, &result))
         error("Variable not found.");
     return true;
@@ -346,59 +346,110 @@ bool calculate(struct Calculation *calculation) {
     return true;
 }
 
-/// @brief Quickly thrown together to easily test the calculator.
+/// @brief Read a line of input from the user.
+/// @return True if input is obtained successfully.
+bool repl_get_input(void) {
+    static char input[BUFSIZ] = {0};
+    printf("-> ");
+    if (fgets(input, sizeof(input), stdin) == nullptr) {
+        printf("No input found.\n");
+        return false;
+    }
+    cursor = input;
+    return true;
+}
+
+/// @brief Exit command for the REPL.
+/// @return True if exit command is performed.
+bool repl_exit(void) {
+    if (!str("exit"))
+        return false;
+    printf("Good bye.\n");
+    return true;
+}
+
+/// @brief Display the REPL help to the user.
+/// @return True if help command is performed.
+bool repl_help(void) {
+    if (!str("help"))
+        return false;
+    printf("Close program: exit\n"
+           "Define or redefine a variable: var <label> = "
+           "<expression> (always use 'var')\n"
+           "Evaluate an expression: <expression> (e.g., sqrt(2^3)).\n"
+           "Delete variable: del <label>\n");
+    return true;
+}
+
+/// @brief REPL calculate command.
+/// @param result The result of the calculation.
+/// @return True if sound result was obtained.
+bool repl_calculate(double *result) {
+    struct Calculation calculation = {cursor};
+    if (!calculate(&calculation)) {
+        printf("%s\nError near line %zu, column %zu.\n",
+               calculation.error.message, calculation.error.line,
+               calculation.error.column);
+        return false;
+    }
+    printf("%lf\n", calculation.output.value);
+    if (result)
+        *result = calculation.output.value;
+    return true;
+}
+
+/// @brief REPL delete command.
+/// @return True if the command is performed.
+bool repl_delete_variable(void) {
+    if (!str("del ")) // The suffixed space matters.
+        return false;
+    char label[VARLEN] = {0};
+    if (!(cursor = variable_extract_label(cursor, label))) {
+        printf("Variable name invalid (too long / missing).\n");
+        return true;
+    }
+    if (!variable_delete(label)) {
+        printf("Nothing to delete.\n");
+        return true;
+    }
+    return true;
+}
+
+/// @brief REPL create (or replace) variable command.
+/// @return True if the command is performed.
+bool repl_create_variable(void) {
+    if (!str("var ")) // The suffixed space matters.
+        return false;
+    char label[VARLEN] = {0};
+    whitespace();
+    if (!(cursor = variable_extract_label(cursor, label))) {
+        printf("Variable name invalid (too long / missing).\n");
+        return true;
+    }
+    if (!chr('=')) {
+        printf("Missing '=' after variable label.\n");
+        return true;
+    }
+    double result;
+    if (repl_calculate(&result))
+        if (!variable_define(label, result)) {
+            printf("Too many variables.\n");
+            return true;
+        }
+    // whitespace();
+    return true;
+}
+
+/// @brief Calculator REPL.
 void read_evaluate_print_loop(void) {
-    char input[BUFSIZ] = {0};
     printf("Calculator REPL. Type 'help' to view commands.\n");
     for (;;) {
-        char label[VARLEN] = {0};
-        printf("-> ");
-        if (fgets(input, sizeof(input), stdin)) {
-            cursor = input;
-            if (str("exit")) {
-                break;
-            } else if (str("help")) {
-                printf(
-                    "Close program: exit\n"
-                    "Define or redefine a variable: var <label> = "
-                    "<expression> (always use 'var')\n"
-                    "Evaluate an expression: <expression> (e.g., sqrt(2^3)).\n"
-                    "Delete variable: del <label>\n");
-                continue;
-            } else if (str("del ")) {
-                whitespace();
-                if (!(cursor = variable_extract_label(cursor, label))) {
-                    printf("Variable name invalid (too long / missing).\n");
-                    continue;
-                }
-                if (!variable_delete(label))
-                    printf("Nothing to delete.\n");
-                continue;
-            } else if (str("var ")) { // The suffixed space matters.
-                whitespace();
-                if (!(cursor = variable_extract_label(cursor, label))) {
-                    printf("Variable name invalid (too long / missing).\n");
-                    continue;
-                }
-                if (!chr('=')) {
-                    printf("Missing '=' after variable label.\n");
-                    continue;
-                }
-                whitespace();
-            }
-            struct Calculation calculation = {cursor};
-            if (calculate(&calculation)) {
-                if (label[0])
-                    if (!variable_define(label, calculation.output.value)) {
-                        printf("Too many variables.\n");
-                        continue;
-                    }
-                printf("%lf\n", calculation.output.value);
-            } else
-                printf("%s\nError near line %zu, column %zu.\n",
-                       calculation.error.message, calculation.error.line,
-                       calculation.error.column);
-        }
+        if (!repl_get_input())
+            continue;
+        if (repl_exit())
+            break;
+        if (repl_help() || repl_create_variable() || repl_delete_variable())
+            continue;
+        repl_calculate(nullptr); // Implicitly do calculation on no command.
     }
-    printf("Good bye.\n");
 }
