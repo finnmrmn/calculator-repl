@@ -27,7 +27,7 @@ size_t count;
 /// @brief Shifts the cursor through a label.
 /// @param anchor The start of the input.
 /// @param label The extracted label.
-/// @return The updated cursor.
+/// @return The updated cursor. 'nullptr' on failure.
 const char *variable_extract_label(const char *anchor,
                                    const char label[VARLEN]) {
     const char *cursor = anchor;
