@@ -440,16 +440,22 @@ bool repl_create_variable(void) {
     return true;
 }
 
+/// @brief A single iteration through the REPL.
+/// @return True if another iteration should happen. False if terminating REPL.
+bool repl_iteration(void) {
+    if (!repl_get_input())
+        return true;
+    if (repl_exit())
+        return false;
+    if (repl_help() || repl_create_variable() || repl_delete_variable())
+        return true;
+    repl_calculate(nullptr); // Implicitly do calculation on no command.
+    return true;
+}
+
 /// @brief Calculator REPL.
 void read_evaluate_print_loop(void) {
     printf("Calculator REPL. Type 'help' to view commands.\n");
-    for (;;) {
-        if (!repl_get_input())
-            continue;
-        if (repl_exit())
-            break;
-        if (repl_help() || repl_create_variable() || repl_delete_variable())
-            continue;
-        repl_calculate(nullptr); // Implicitly do calculation on no command.
-    }
+    while (repl_iteration())
+        ;
 }
