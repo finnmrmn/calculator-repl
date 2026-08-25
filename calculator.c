@@ -30,11 +30,12 @@ double result;
 jmp_buf syntax_error;
 const char *error_message;
 
-/// @brief Start of input for finding error. This is used to locate the error.
+/// @brief Copy of the start of the input. This is used to locate the error.
 const char *input_expression;
 size_t error_column;
 size_t error_line;
 
+/// @brief Skips over any whitespace characters until first non-whitespace.
 void whitespace(void) {
     while (isspace(*cursor))
         cursor++;
@@ -42,11 +43,12 @@ void whitespace(void) {
 
 /// @brief Wrapper function that enforces parsing and context invariants.
 ///
-/// It backtracks as far as necessary if the match is not correct initially.
+/// If the parser succeeds, then the context is updated and the cursor is
+/// progressed. It backtracks as far as necessary if the parser fails to match.
 ///
 /// @param parser The parser being applied to the cursor. Returns true if
 /// successful.
-/// @return True if parser succeeded, context updated, and cursor progressed.
+/// @return True if parser succeeded.
 bool parse(bool (*parser)(void)) {
     whitespace();
     const char *cursor_copy = cursor;
@@ -166,6 +168,7 @@ double evaluate(double left, enum Operation op, double right) {
 bool expression(void);
 
 double factorial(double n) { return tgamma(n + 1); }
+
 double fibonacci(double n) {
     double sqrt5 = sqrt(5);
     return (pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5;
