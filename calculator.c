@@ -3,12 +3,12 @@
 ///
 /// This is a recursive-descent parser that directly returns a calculated
 /// result. By building nodes (terminals) and branches (non-terminals) on a
-/// 'root' note instead of a double precision number, an abstract syntax tree
+/// 'root' node instead of a double precision number, an abstract syntax tree
 /// tree can be formed and used for deeper semantic analysis; however, in this
 /// case, it is not necessary for a calculator with a simple grammar.
 ///
 /// @author finnmrmn
-/// @date 2026-08-14
+/// @date 2026-10-23
 
 #include "calculator.h"
 #include "variable.h"
