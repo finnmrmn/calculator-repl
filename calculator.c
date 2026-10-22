@@ -367,7 +367,7 @@ bool repl_get_input(void) {
 bool repl_exit(void) {
     if (!str("exit"))
         return false;
-    printf("Good bye.\n");
+    printf("Goodbye.\n");
     return true;
 }
 
@@ -376,11 +376,13 @@ bool repl_exit(void) {
 bool repl_help(void) {
     if (!str("help"))
         return false;
-    printf("Close program: exit\n"
-           "Define or redefine a variable: var <label> = "
-           "<expression> (always use 'var')\n"
-           "Evaluate an expression: <expression> (e.g., sqrt(2^3)).\n"
-           "Delete variable: del <label>\n");
+    printf(
+        "Close program: exit\n"
+        "Define or redefine a variable: var <label> = "
+        "<expression> (always use 'var')\n"
+        "Evaluate an expression: <expression> (e.g., sqrt(2^3)).\n"
+        "Delete variable: del <label>\n"
+    );
     return true;
 }
 
@@ -390,9 +392,12 @@ bool repl_help(void) {
 bool repl_calculate(double *result) {
     struct Calculation calculation = {cursor};
     if (!calculate(&calculation)) {
-        printf("%s\nError near line %zu, column %zu.\n",
-               calculation.error.message, calculation.error.line,
-               calculation.error.column);
+        printf(
+            "%s\nError near line %zu, column %zu.\n",
+            calculation.error.message,
+            calculation.error.line,
+            calculation.error.column
+        );
         return false;
     }
     printf("%lf\n", calculation.output.value);
