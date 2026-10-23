@@ -62,7 +62,7 @@ bool parse(bool (*parser)(void)) {
 
 /// @brief Parse a single character.
 /// @param character The character being matched at the cursor.
-/// @return True if successful.
+/// @return True if the character was matched.
 bool chr(char character) {
     whitespace();
     if (*cursor != character)
@@ -73,7 +73,7 @@ bool chr(char character) {
 
 /// @brief Parse a string.
 /// @param string The string being matched at the cursor.
-/// @return True if successful.
+/// @return True if the string was matched.
 bool str(const char *string) {
     whitespace();
     const char *cursor_copy = cursor;
@@ -115,7 +115,7 @@ void error(char message[]) {
 /// It also supports a couple of transcendental numbers: 'pi' and 'e'.
 /// If nothing matches, then it checks the symbol table.
 ///
-/// @return True if number matched.
+/// @return True if number was matched.
 bool number(void) {
     const char *anchor = cursor;
     if (str("pi"))
