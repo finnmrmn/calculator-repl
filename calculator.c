@@ -444,7 +444,6 @@ bool repl_create_variable(void) {
             printf("Too many variables.\n");
             return true;
         }
-    // whitespace();
     return true;
 }
 
