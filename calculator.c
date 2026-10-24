@@ -8,7 +8,7 @@
 /// case, it is not necessary for a calculator with a simple grammar.
 ///
 /// @author finnmrmn
-/// @date 2026-10-23
+/// @date 2026-10-24
 
 #include "calculator.h"
 #include "variable.h"
