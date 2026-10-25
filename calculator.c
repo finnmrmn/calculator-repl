@@ -211,10 +211,13 @@ bool function_expression(void) {
     return false;
 }
 
+/// @brief Looks up a variable in the symbol table.
+/// @note Variables are created in the REPL extension.
+/// @return True if the variable label is valid and the variable exists.
 bool variable(void) {
     const char label[VARLEN] = {0};
     if (!(cursor = variable_extract_label(cursor, label)))
-        error("Variable is definition invalid (expression syntax error).");
+        error("Variable definition is invalid (expression syntax error).");
     if (!variable_get_value(label, &result))
         error("Variable not found.");
     return true;
@@ -435,7 +438,7 @@ bool repl_create_variable(void) {
         return true;
     }
     if (!chr('=')) {
-        printf("Missing '=' after variable label.\n");
+        printf("Missing '=' or syntax error before it.\n");
         return true;
     }
     double result;
@@ -452,6 +455,11 @@ bool repl_create_variable(void) {
 bool repl_iteration(void) {
     if (!repl_get_input())
         return true;
+    whitespace();
+    if (*cursor == '\0') {
+        printf("Nothing to do.\n");
+        return true;
+    }
     if (repl_exit())
         return false;
     if (repl_help() || repl_create_variable() || repl_delete_variable())
